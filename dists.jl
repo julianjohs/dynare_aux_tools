@@ -71,8 +71,8 @@ end
 invgamma_moments(α::Real, β::Real; args...) = invgamma_moments((α, β); args...)
 invgamma_moments(params::AbstractArray{<:Real, 1}; args...) = invgamma_moments((params[1], params[2]); args...)
 
-function invgamma_solve(m::Real, s::Real)
-    solver = nlsolve(params -> invgamma_moments(params) .- (m, s), [3.0, 5.0])
+function invgamma_solve(m::Real, s::Real; ftol=1e-12)
+    solver = nlsolve(params -> invgamma_moments(params) .- (m, s), [2.1, 0.2])
     return solver.zero
 end
 invgamma_solve(params::AbstractArray{<:Real, 1}) = invgamma_solve(params[1], params[2])
