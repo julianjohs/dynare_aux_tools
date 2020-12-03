@@ -56,3 +56,24 @@ function gamma_solve(m::Real, s::Real)
 end
 gamma_solve(params::AbstractArray{<:Real, 1}) = gamma_solve(params[1], params[2])
 gamma_solve(params::Tuple{Vararg{<:Real}}) =    gamma_solve(params[1], params[2])
+
+function invgamma_moments(params::Tuple{Real, Real}; plot=nothing)
+    α = params[1]
+    β = params[2]
+    dist = InverseGamma(α, β)
+    mu = mean(dist)
+    sig = std(dist)
+    if plot !== nothing
+        display(plot(dist)) # you can comment this out
+    end
+    return (mu, sig)
+end
+invgamma_moments(α::Real, β::Real; args...) = invgamma_moments((α, β); args...)
+invgamma_moments(params::AbstractArray{<:Real, 1}; args...) = invgamma_moments((params[1], params[2]); args...)
+
+function invgamma_solve(m::Real, s::Real)
+    solver = nlsolve(params -> invgamma_moments(params) .- (m, s), [3.0, 5.0])
+    return solver.zero
+end
+invgamma_solve(params::AbstractArray{<:Real, 1}) = invgamma_solve(params[1], params[2])
+invgamma_solve(params::Tuple{Vararg{<:Real}}) =    invgamma_solve(params[1], params[2])
